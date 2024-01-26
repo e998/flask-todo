@@ -22,18 +22,21 @@ class Todo(db.Model):
     complete = db.Column(db.Boolean)
     # __table_args__ = {'extend_existing': True}
 
-
+### Candidate Concept #2: Routing
 @app.route("/")
 def home():
     todo_list = Todo.query.all()
+    ### Candidate Concept #1: Rendering
     return render_template('base.html', todo_list=todo_list)
 
+### Candidate Concept #3: Submitting Data
 @app.route("/add", methods=['POST'])
 def add():
     title = request.form.get("title")
     new_todo = Todo(title=title, complete=False)
     db.session.add(new_todo)
     db.session.commit()
+    ### Candidate Concept #5: Redirection
     return redirect(url_for("home"))
 
 @app.route("/update/<int:todo_id>")
@@ -43,6 +46,7 @@ def update(todo_id):
     db.session.commit()
     return redirect(url_for("home"))
 
+### Candidate Concept #4: Deletion
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
     todo = Todo.query.filter_by(id=todo_id).first()
@@ -53,6 +57,4 @@ def delete(todo_id):
 if __name__ == "__main__":
     db.create_all()
     # Set debug to True so you don't have to reload server each time we make a change in code
-    # Reactivity?
-    # No
     app.run(debug=True)
